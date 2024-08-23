@@ -3,12 +3,14 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/next"
+      "use": "@vercel/next",
+      "config": {
+        "installCommand": "yarn install",
+        "buildCommand": "yarn build"
+      }
     }
   ],
-  "build": {
-    "env": {
-      "YARN_VERSION": "4.1.1"
-    }
+  "env": {
+    "YARN_VERSION": "4.1.1"
   }
 }
