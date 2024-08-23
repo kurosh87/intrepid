@@ -1,6 +1,6 @@
-   {
-     "version": 2,
-     "buildCommand": "yarn vercel-build",
-     "installCommand": "yarn set version 4.1.1 && yarn install",
-     "framework": "nextjs"
-   }
+{
+  "version": 2,
+  "buildCommand": "yarn build",
+  "installCommand": "yarn install",
+  "framework": "nextjs"
+}
