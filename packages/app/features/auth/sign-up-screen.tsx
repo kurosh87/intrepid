@@ -17,6 +17,7 @@ import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form
 import { createParam } from 'solito'
 import { Link } from 'solito/link'
 import { z } from 'zod'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
 
 import { SocialLogin } from './components/SocialLogin'
 
@@ -31,6 +32,7 @@ export const SignUpScreen = () => {
   const supabase = useSupabase()
   const updateParams = useUpdateParams()
   const { params } = useParams()
+  const supabaseClient = useSupabaseClient()
 
   useEffect(() => {
     if (params?.email) {
@@ -66,6 +68,20 @@ export const SignUpScreen = () => {
     }
   }
 
+  const handleAnonymousLogin = async () => {
+    const { data, error } = await supabaseClient.auth.signInWithOtp({
+      email: `anonymous-${Date.now()}@example.com`,
+    })
+    
+    if (error) {
+      console.error('Error with anonymous login:', error.message)
+      // You can add error handling UI here
+    } else {
+      // Redirect to dashboard or reload page
+      window.location.href = '/dashboard'
+    }
+  }
+
   return (
     <FormProvider {...form}>
       {form.formState.isSubmitSuccessful ? (
@@ -93,6 +109,17 @@ export const SignUpScreen = () => {
               </Theme>
               <SignInLink />
               {isWeb && <SocialLogin />}
+              <button onClick={handleAnonymousLogin} style={{
+                backgroundColor: '#4A5568',
+                color: 'white',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                border: 'none',
+                cursor: 'pointer',
+                marginTop: '10px'
+              }}>
+                Anonymous Login (Temporary)
+              </button>
             </>
           )}
         >
