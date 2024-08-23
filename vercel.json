@@ -1,6 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "yarn build",
-  "installCommand": ".yarn/releases/yarn-4.4.0.cjs install",
-  "framework": "nextjs"
+  "buildCommand": "yarn build:ci",
+  "installCommand": "yarn install",
+  "framework": "nextjs",
+  "outputDirectory": "apps/next/.next"
 }
