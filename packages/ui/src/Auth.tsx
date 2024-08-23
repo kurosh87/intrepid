@@ -7,25 +7,27 @@ const supabase = createClient(process.env.SUPABASE_URL ?? '', process.env.SUPABA
 export function Auth() {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
-  const [isSignUp, setIsSignUp] = useState(false)
 
-  const handleAuth = async (email: string) => {
+  const handleEmailAuth = async () => {
     try {
       setLoading(true)
-      let result
-      if (isSignUp) {
-        result = await supabase.auth.signUp({ email, password: '' })
-      } else {
-        result = await supabase.auth.signInWithOtp({ email })
-      }
-      if (result.error) throw result.error
-      alert(
-        isSignUp
-          ? 'Check your email to confirm your account!'
-          : 'Check your email for the login link!'
-      )
+      const { error } = await supabase.auth.signInWithOtp({ email })
+      if (error) throw error
+      alert('Check your email for the login link!')
     } catch (error) {
-      alert(error.error_description || error.message)
+      alert(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleOAuthLogin = async (provider) => {
+    try {
+      setLoading(true)
+      const { error } = await supabase.auth.signInWithOAuth({ provider })
+      if (error) throw error
+    } catch (error) {
+      alert(error.message)
     } finally {
       setLoading(false)
     }
@@ -34,21 +36,15 @@ export function Auth() {
   return (
     <YStack space>
       <Input placeholder="Your email" value={email} onChangeText={setEmail} />
-      <Button
-        disabled={loading}
-        onPress={(e) => {
-          e.preventDefault()
-          handleAuth(email)
-        }}
-      >
-        {loading ? 'Loading' : isSignUp ? 'Sign Up' : 'Send magic link'}
+      <Button disabled={loading} onPress={handleEmailAuth}>
+        {loading ? 'Loading' : 'Sign in with Email'}
       </Button>
-      <XStack>
-        <Text>{isSignUp ? 'Already have an account?' : "Don't have an account?"}</Text>
-        <Button variant="outlined" onPress={() => setIsSignUp(!isSignUp)}>
-          {isSignUp ? 'Log In' : 'Sign Up'}
-        </Button>
-      </XStack>
+      <Button disabled={loading} onPress={() => handleOAuthLogin('google')}>
+        Sign in with Google
+      </Button>
+      <Button disabled={loading} onPress={() => handleOAuthLogin('apple')}>
+        Sign in with Apple
+      </Button>
     </YStack>
   )
 }
