@@ -1,16 +1,6 @@
-{
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next",
-      "config": {
-        "installCommand": "yarn install",
-        "buildCommand": "yarn build"
-      }
-    }
-  ],
-  "env": {
-    "YARN_VERSION": "4.1.1"
-  }
-}
+   {
+     "version": 2,
+     "buildCommand": "yarn vercel-build",
+     "installCommand": "yarn set version 4.1.1 && yarn install",
+     "framework": "nextjs"
+   }
